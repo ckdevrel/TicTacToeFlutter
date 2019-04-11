@@ -5,15 +5,15 @@ class GameRules {
 
   GameRules() {
     gameStates = [
-      GameState(position: 11),
-      GameState(position: 12),
-      GameState(position: 13),
-      GameState(position: 21),
-      GameState(position: 22),
-      GameState(position: 23),
-      GameState(position: 31),
-      GameState(position: 32),
-      GameState(position: 33)
+      GameState(position: "1,1"),
+      GameState(position: "1,2"),
+      GameState(position: "1,3"),
+      GameState(position: "2,1"),
+      GameState(position: "2,2"),
+      GameState(position: "2,3"),
+      GameState(position: "3,1"),
+      GameState(position: "3,2"),
+      GameState(position: "3,3")
     ];
   }
 
@@ -42,8 +42,8 @@ class GameRules {
   }
 
   void winGame() {
-    updateState(0, GameState(position: 11, value: "W"));
-    updateState(4, GameState(position: 22, value: "I"));
-    updateState(8, GameState(position: 33, value: "N"));
+    updateState(0, GameState(position: "1,1", value: "W"));
+    updateState(4, GameState(position: "2,2", value: "I"));
+    updateState(8, GameState(position: "3,3", value: "N"));
   }
 }

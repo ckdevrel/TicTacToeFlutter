@@ -17,8 +17,8 @@ void main() {
     var firstPosition = 0;
     var lastPosition = 8;
 
-    var firstObject = GameState(position: 11, value: "x");
-    var secondObject = GameState(position: 33, value: "o");
+    var firstObject = GameState(position: "1,1", value: "x");
+    var secondObject = GameState(position: "3,3", value: "o");
 
     gameRules.updateState(firstPosition, firstObject);
     gameRules.updateState(lastPosition, secondObject);
@@ -27,8 +27,8 @@ void main() {
     expect(secondObject, gameRules.getGameState(lastPosition));
     expect('x', firstObject.getValue);
     expect('o', secondObject.getValue);
-    expect(11, firstObject.getPosition);
-    expect(33, secondObject.getPosition);
+    expect("1,1", firstObject.getPosition);
+    expect("3,3", secondObject.getPosition);
   });
 
   test("should check for a new move based on a clicked position", () {
@@ -38,7 +38,7 @@ void main() {
 
     expect(true, gameRules.isNewMove(firstPosition));
 
-    var firstObject = GameState(position: 11, value: "x");
+    var firstObject = GameState(position: "1,1", value: "x");
     gameRules.updateState(firstPosition, firstObject);
 
     expect(false, gameRules.isNewMove(firstPosition));
@@ -57,14 +57,14 @@ void main() {
 
 String getInitialJsonData() {
   return [
-    {"position": 11, "value": null},
-    {"position": 12, "value": null},
-    {"position": 13, "value": null},
-    {"position": 21, "value": null},
-    {"position": 22, "value": null},
-    {"position": 23, "value": null},
-    {"position": 31, "value": null},
-    {"position": 32, "value": null},
-    {"position": 33, "value": null}
+    {"position": "1,1", "value": null},
+    {"position": "1,2", "value": null},
+    {"position": "1,3", "value": null},
+    {"position": "2,1", "value": null},
+    {"position": "2,2", "value": null},
+    {"position": "2,3", "value": null},
+    {"position": "3,1", "value": null},
+    {"position": "3,2", "value": null},
+    {"position": "3,3", "value": null}
   ].toString();
 }
