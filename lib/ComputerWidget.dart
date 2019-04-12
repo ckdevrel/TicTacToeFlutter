@@ -5,7 +5,7 @@ class ComputerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        color: Colors.indigo,
+        color: Colors.indigoAccent,
         alignment: Alignment.center,
         child: CircleAvatar(backgroundColor: Colors.pinkAccent, radius: 30));
   }

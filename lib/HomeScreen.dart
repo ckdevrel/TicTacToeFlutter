@@ -33,21 +33,11 @@ class _HomePageState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: new Scaffold(
           appBar: new AppBar(
+            backgroundColor: Color.fromRGBO(44, 62, 80, 1),
             actions: <Widget>[
-              FlatButton(
-                onPressed: () {
-                  setState(() {
-                    gameRules.winGame();
-                  });
-                },
-                padding: EdgeInsets.all(0),
-                child: Text(
-                  'WIN',
-                  style: TextStyle(color: Colors.yellow),
-                ),
-              ),
               FlatButton(
                 onPressed: () {
                   setState(() {
@@ -57,7 +47,7 @@ class _HomePageState extends State<HomeScreen> {
                 padding: EdgeInsets.all(0),
                 child: Text(
                   'RESET',
-                  style: TextStyle(color: Colors.yellow),
+                  style: TextStyle(color: Colors.white),
                 ),
               ),
               Switch(
@@ -68,48 +58,37 @@ class _HomePageState extends State<HomeScreen> {
                     });
                   }),
             ],
-            leading: Icon(Icons.home),
-            title: new Text('Game'),
+            title: new Text('Tic Tac Toe'),
           ),
-          body: Column(
-            children: <Widget>[
-              Expanded(
-                child: GridView.builder(
-                    itemCount: gameRules.getCount(),
-                    padding: EdgeInsets.all(16),
-                    gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3,
-                        mainAxisSpacing: 3,
-                        crossAxisSpacing: 3),
-                    itemBuilder: (BuildContext context, int index) {
-                      GameState gameState = gameRules.getGameState(index);
-                      String value = gameState.getValue;
-                       getGridRow(value);
-                      return new GestureDetector(
-                        child: getGridRow(value),
-                        onTap: () {
-                          if (gameRules.isNewMove(index)) {
-                            setState(() {
-                              this.gameRules.updateState(
-                                  index,
-                                  GameState(
-                                      position: gameState.position,
-                                      value: isChecked
-                                          ? GameConstants.COMPUTER
-                                          : GameConstants.PLAYER));
-                              jsonData = gameRules.getJSON();
-                            });
-                          }
-                        },
-                      );
-                    }),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(24.0),
-                child: Text(jsonData ?? "",
-                    style: TextStyle(color: Colors.pinkAccent, fontSize: 10)),
-              ),
-            ],
+          body: Center(
+            child: GridView.builder(
+              shrinkWrap: true,
+                itemCount: gameRules.getCount(),
+                padding: EdgeInsets.all(16),
+                gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3, mainAxisSpacing: 3, crossAxisSpacing: 3),
+                itemBuilder: (BuildContext context, int index) {
+                  GameState gameState = gameRules.getGameState(index);
+                  String value = gameState.getValue;
+                  getGridRow(value);
+                  return new GestureDetector(
+                    child: getGridRow(value),
+                    onTap: () {
+                      if (gameRules.isNewMove(index)) {
+                        setState(() {
+                          this.gameRules.updateState(
+                              index,
+                              GameState(
+                                  position: gameState.position,
+                                  value: isChecked
+                                      ? GameConstants.COMPUTER
+                                      : GameConstants.PLAYER));
+                          jsonData = gameRules.getJSON();
+                        });
+                      }
+                    },
+                  );
+                }),
           )),
     );
   }
@@ -133,7 +112,7 @@ class _HomePageState extends State<HomeScreen> {
         childWidget = WinWidget('N');
         break;
       default:
-        childWidget = Container(color: Colors.indigo);
+        childWidget = Container(color: Colors.indigoAccent);
         break;
     }
     return childWidget;

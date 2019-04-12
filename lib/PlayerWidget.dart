@@ -4,7 +4,7 @@ class PlayerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.indigo,
+      color: Colors.indigoAccent,
       alignment: Alignment.center,
       child: Icon(Icons.close, color: Colors.yellowAccent, size: 60)
     );

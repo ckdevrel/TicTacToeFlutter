@@ -48,15 +48,33 @@ void main() {
       () {
     GameRules gameRules = GameRules();
 
-    String expectedJson = getInitialJsonData();
+    String expectedJson = positionMap.toString();
     String initialJsonData = gameRules.getJSON();
 
     expect(expectedJson, initialJsonData);
   });
+
+  test("should get json when first (computer) and last (player) positions are selected",
+          () {
+        GameRules gameRules = GameRules();
+
+        String expectedJson = selectedPositionMap.toString();
+        var firstPosition = 0;
+        var lastPosition = 8;
+
+        var firstObject = GameState(position: "1,1", value: "o");
+        var secondObject = GameState(position: "3,3", value: "x");
+
+        gameRules.updateState(firstPosition, firstObject);
+        gameRules.updateState(lastPosition, secondObject);
+
+        String jsonData = gameRules.getJSON();
+
+        expect(expectedJson, jsonData);
+      });
 }
 
-String getInitialJsonData() {
-  return [
+var positionMap  = [
     {"position": "1,1", "value": null},
     {"position": "1,2", "value": null},
     {"position": "1,3", "value": null},
@@ -66,5 +84,16 @@ String getInitialJsonData() {
     {"position": "3,1", "value": null},
     {"position": "3,2", "value": null},
     {"position": "3,3", "value": null}
-  ].toString();
-}
+];
+
+var selectedPositionMap  = [
+  {"position": "1,1", "value": "o"},
+  {"position": "1,2", "value": null},
+  {"position": "1,3", "value": null},
+  {"position": "2,1", "value": null},
+  {"position": "2,2", "value": null},
+  {"position": "2,3", "value": null},
+  {"position": "3,1", "value": null},
+  {"position": "3,2", "value": null},
+  {"position": "3,3", "value": "x"}
+];

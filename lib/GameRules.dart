@@ -40,10 +40,4 @@ class GameRules {
         .toList()
         .toString();
   }
-
-  void winGame() {
-    updateState(0, GameState(position: "1,1", value: "W"));
-    updateState(4, GameState(position: "2,2", value: "I"));
-    updateState(8, GameState(position: "3,3", value: "N"));
-  }
 }
