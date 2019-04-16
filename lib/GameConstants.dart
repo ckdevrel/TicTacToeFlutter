@@ -1,4 +1,4 @@
 class GameConstants {
-  static const String PLAYER =   'x';
-  static const String COMPUTER = 'o';
+  static const String PLAYER =   'X';
+  static const String COMPUTER = 'O';
 }

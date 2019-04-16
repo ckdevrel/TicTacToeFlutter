@@ -1,6 +1,5 @@
-import 'dart:collection';
-
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:tictactoe/ComputerWidget.dart';
 import 'package:tictactoe/GameConstants.dart';
 import 'package:tictactoe/GameRules.dart';
@@ -17,8 +16,6 @@ class _HomePageState extends State<HomeScreen> {
   GameRules gameRules;
 
   bool isChecked = false;
-
-  String jsonData;
 
   @override
   void initState() {
@@ -76,15 +73,13 @@ class _HomePageState extends State<HomeScreen> {
                     onTap: () {
                       if (gameRules.isNewMove(index)) {
                         setState(() {
-                          this.gameRules.updateState(
+                          gameRules.updateState(
                               index,
                               GameState(
                                   position: gameState.position,
-                                  value: isChecked
-                                      ? GameConstants.COMPUTER
-                                      : GameConstants.PLAYER));
-                          jsonData = gameRules.getJSON();
+                                  value: GameConstants.PLAYER));
                         });
+                          postData(index, gameState);
                       }
                     },
                   );
@@ -116,5 +111,14 @@ class _HomePageState extends State<HomeScreen> {
         break;
     }
     return childWidget;
+  }
+
+  Future<void> postData(int index, GameState gameState) async {
+    debugPrint("Printing request "+ gameRules.getBoardJSON());
+    http.Response res = await http.post("https://fathomless-savannah-49582.herokuapp.com/play", body: gameRules.getBoardJSON()); // post api call
+    debugPrint("Response body "+ res.body.toString());
+    setState(() {
+      gameRules.updateStates(gameRules.getGameStatesFromResponse(res.body));
+    });
   }
 }
