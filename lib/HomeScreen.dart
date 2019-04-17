@@ -19,9 +19,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomePageState extends State<HomeScreen> {
   GameRules gameRules;
-
-  bool isChecked = false;
-
   bool isDisableClick = false;
 
   @override
@@ -41,7 +38,9 @@ class _HomePageState extends State<HomeScreen> {
       debugShowCheckedModeBanner: false,
       home: Builder(builder: (context) {
         return  Scaffold(
+          backgroundColor: Colors.grey.shade200,
             appBar: new AppBar(
+              centerTitle: false,
               backgroundColor: Color.fromRGBO(44, 62, 80, 1),
               actions: <Widget>[
                 FlatButton(
@@ -56,13 +55,6 @@ class _HomePageState extends State<HomeScreen> {
                     style: TextStyle(color: Colors.white),
                   ),
                 ),
-                Switch(
-                    value: isChecked,
-                    onChanged: (value) {
-                      setState(() {
-                        isChecked = value;
-                      });
-                    }),
               ],
               title: new Text('Tic Tac Toe'),
             ),
@@ -90,10 +82,9 @@ class _HomePageState extends State<HomeScreen> {
                                         value: GameConstants.PLAYER));
                                 isDisableClick = true;
                               });
-                              postData();
+                              postData(context);
                             } else {
-                              debugPrint(
-                                  'No moves can be done if there is no internet connection');
+                              loadMessagePopup(context, "No internet connection");
                             }
                           });
                         }
@@ -131,10 +122,10 @@ class _HomePageState extends State<HomeScreen> {
     return childWidget;
   }
 
-  Future<void> postData() async {
+  Future<void> postData(BuildContext context) async {
     debugPrint("Printing request " + gameRules.getBoardJSON());
     http.Response res = await http.post(
-        "https://fathomless-savannah-49582.herokuapp.com/play",
+        GameConstants.URL,
         body: gameRules.getBoardJSON());
     debugPrint("Response body " + res.body.toString());
     setState(() {
@@ -142,32 +133,20 @@ class _HomePageState extends State<HomeScreen> {
       var response = gameRules.getGameStatesFromResponse(res.body);
       var status = response.gameStatus;
 
-      switch (status) {
-        case GameConstants.STATUS_INPROGRESS:
-          gameRules.updateStates(response.gameStates);
-          break;
-
-        case GameConstants.STATUS_LOST:
-          loadGameResultsPage("You won!");
-          break;
-
-        case GameConstants.STATUS_DRAW:
-          loadGameResultsPage("Game over!");
-          break;
-
-        case GameConstants.STATUS_WON:
-          loadGameResultsPage("You lost!");
-          break;
+      if(status == GameConstants.STATUS_INPROGRESS){
+        gameRules.updateStates(response.gameStates);
+      } else {
+        loadMessagePopup(context, status);
       }
     });
   }
 
-  Future<void> loadGameResultsPage(String message) async {
+  Future<void> loadMessagePopup(BuildContext context, String message) async {
     init();
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => GameResultScreen(message)),
-    );
+    Navigator.of(context).push(PageRouteBuilder(
+        opaque: false,
+        pageBuilder: (BuildContext context, _, __) =>
+            GameResultScreen(message)));
   }
 
   Future<bool> isNetworkAvailable() async {
