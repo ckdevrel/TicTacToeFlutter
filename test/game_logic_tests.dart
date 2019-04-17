@@ -44,56 +44,49 @@ void main() {
     expect(false, gameRules.isNewMove(firstPosition));
   });
 
-  test("should get json for the very first move based on the position selected",
+  test("should get board json before the player makes a first move",
       () {
     GameRules gameRules = GameRules();
 
-    String expectedJson = positionMap.toString();
-    String initialJsonData = gameRules.getJSON();
+    String initialJsonData = gameRules.getBoardJSON();
 
-    expect(expectedJson, initialJsonData);
+    expect(getEmptyStateBoardJson(), initialJsonData);
   });
 
-  test("should get json when first (computer) and last (player) positions are selected",
-          () {
-        GameRules gameRules = GameRules();
+  test(
+      "should get json when first (player) and last (computer) positions are selected",
+      () {
+    GameRules gameRules = GameRules();
 
-        String expectedJson = selectedPositionMap.toString();
-        var firstPosition = 0;
-        var lastPosition = 8;
+    var firstPosition = 0;
+    var lastPosition = 8;
 
-        var firstObject = GameState(position: "1,1", value: "o");
-        var secondObject = GameState(position: "3,3", value: "x");
+    var firstObject = GameState(position: "0,0", value: "X");
+    var secondObject = GameState(position: "2,2", value: "O");
 
-        gameRules.updateState(firstPosition, firstObject);
-        gameRules.updateState(lastPosition, secondObject);
+    gameRules.updateState(firstPosition, firstObject);
+    gameRules.updateState(lastPosition, secondObject);
 
-        String jsonData = gameRules.getJSON();
+    String jsonData = gameRules.getBoardJSON();
 
-        expect(expectedJson, jsonData);
-      });
+    expect(getActualJsonRequest(), jsonData);
+  });
 }
 
-var positionMap  = [
+String getActualJsonRequest() {
+  return [
+    {"position": "0,0", "value": "X"},
+    {"position": "0,1", "value": null},
+    {"position": "0,2", "value": null},
+    {"position": "1,0", "value": null},
     {"position": "1,1", "value": null},
     {"position": "1,2", "value": null},
-    {"position": "1,3", "value": null},
+    {"position": "2,0", "value": null},
     {"position": "2,1", "value": null},
-    {"position": "2,2", "value": null},
-    {"position": "2,3", "value": null},
-    {"position": "3,1", "value": null},
-    {"position": "3,2", "value": null},
-    {"position": "3,3", "value": null}
-];
+    {"position": "2,2", "value": "O"}
+  ].toString();
+}
 
-var selectedPositionMap  = [
-  {"position": "1,1", "value": "o"},
-  {"position": "1,2", "value": null},
-  {"position": "1,3", "value": null},
-  {"position": "2,1", "value": null},
-  {"position": "2,2", "value": null},
-  {"position": "2,3", "value": null},
-  {"position": "3,1", "value": null},
-  {"position": "3,2", "value": null},
-  {"position": "3,3", "value": "x"}
-];
+String getEmptyStateBoardJson() {
+  return [{"position":"0,0","value":"X"},{"position":"0,1","value":"X"},{"position":"0,2","value":null},{"position":"1,0","value":null},{"position":"1,1","value":null},{"position":"1,2","value":null},{"position":"2,0","value":"O"},{"position":"2,1","value":null},{"position":"2,2","value":null}].toString();
+}
