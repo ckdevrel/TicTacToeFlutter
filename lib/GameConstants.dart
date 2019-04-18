@@ -6,4 +6,5 @@ class GameConstants {
   static const String STATUS_LOST = 'lost';
   static const String STATUS_DRAW = 'draw';
   static const String URL = 'https://fathomless-savannah-49582.herokuapp.com/play';
+  static const int RESULT_OK = 200;
 }
