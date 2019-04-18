@@ -1,16 +1,8 @@
-# tictactoe
+# Tic Tac Toe Flutter
 
-A new Flutter project.
+<a href="https://imgur.com/smUcuhz"><img src="https://i.imgur.com/smUcuhz.gif" title="source: imgur.com" /></a>
 
-## Getting Started
 
-This project is a starting point for a Flutter application.
+## Server side code
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.io/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.io/docs/cookbook)
-
-For help getting started with Flutter, view our 
-[online documentation](https://flutter.io/docs), which offers tutorials, 
-samples, guidance on mobile development, and a full API reference.
+https://github.com/abdulrahmank/tic_tac_toe_solver
