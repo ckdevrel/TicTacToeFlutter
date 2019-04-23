@@ -7,9 +7,9 @@ import 'package:tictactoe/GameRules.dart';
 import 'package:tictactoe/GameState.dart';
 import 'package:tictactoe/PlayerWidget.dart';
 import 'package:tictactoe/WinWidget.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'GameResultScreen.dart';
+import 'SharedPreferenceHelper.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -23,14 +23,25 @@ class _HomePageState extends State<HomeScreen> {
 
   TextEditingController ipInputController;
 
+  String gameUrl;
+
   @override
   void initState() {
     super.initState();
     init();
     dio = Dio();
-    dio.options.connectTimeout = 1500; //5s
-    dio.options.receiveTimeout = 1500;
-    ipInputController = new TextEditingController(text: GameConstants.DEFAULT_URL);
+    dio.options.connectTimeout = 20000; //5s
+    dio.options.receiveTimeout = 20000;
+    SharedPreferenceHelper.getGameUrl().then((url){
+      if(url != null && url.isNotEmpty){
+        gameUrl = url;
+      }else{
+        gameUrl = GameConstants.DEFAULT_URL;
+      }
+      debugPrint("url from prefernece" +gameUrl);
+      ipInputController = new TextEditingController(text: gameUrl);
+    });
+
   }
 
   void init() {
@@ -77,8 +88,13 @@ class _HomePageState extends State<HomeScreen> {
                         ),
                         FlatButton(
                           onPressed: () {
-                            Navigator.pop(context);
-                            debugPrint(ipInputController.value.toString());
+                            setState(() {
+                              gameUrl = ipInputController.text.toString();
+                              debugPrint("url edited "+ gameUrl);
+                              SharedPreferenceHelper.setGameUrl(gameUrl);
+                              Navigator.pop(context);
+                            });
+
                           },
                           child: Text(
                             'DONE',
@@ -164,7 +180,8 @@ class _HomePageState extends State<HomeScreen> {
   Future<void> postData(BuildContext context) async {
     try {
       debugPrint("Printing request " + gameRules.getBoardJSON());
-      var response =  await dio.post(GameConstants.DEFAULT_URL, data: gameRules.getBoardJSON());
+      debugPrint("Printing request URL " + gameUrl);
+      var response =  await dio.post(gameUrl, data: gameRules.getBoardJSON());
       debugPrint("Response body " + response.data.toString());
       setState(() {
         isDisableClick = false;
