@@ -1,12 +1,13 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tictactoe/GameRules.dart';
 import 'package:tictactoe/GameState.dart';
-
+import 'dart:convert' show json;
 void main() {
   test(
       "should build defualt game state array with position and value as null and return the count as 9",
       () {
     GameRules gameRules = GameRules();
+    gameRules.initGameRules();
     expect(9, gameRules.getCount());
   });
 
@@ -14,6 +15,8 @@ void main() {
       "should update first and last position with different state object and verify that the states has been changed",
       () {
     GameRules gameRules = GameRules();
+    gameRules.initGameRules();
+
     var firstPosition = 0;
     var lastPosition = 8;
 
@@ -33,6 +36,7 @@ void main() {
 
   test("should check for a new move based on a clicked position", () {
     GameRules gameRules = GameRules();
+    gameRules.initGameRules();
 
     var firstPosition = 0;
 
@@ -47,6 +51,7 @@ void main() {
   test("should get board json before the player makes a first move",
       () {
     GameRules gameRules = GameRules();
+    gameRules.initGameRules();
 
     String initialJsonData = gameRules.getBoardJSON();
 
@@ -57,6 +62,7 @@ void main() {
       "should get json when first (player) and last (computer) positions are selected",
       () {
     GameRules gameRules = GameRules();
+    gameRules.initGameRules();
 
     var firstPosition = 0;
     var lastPosition = 8;
@@ -71,22 +77,15 @@ void main() {
 
     expect(getActualJsonRequest(), jsonData);
   });
+
+
 }
 
 String getActualJsonRequest() {
-  return [
-    {"position": "0,0", "value": "X"},
-    {"position": "0,1", "value": null},
-    {"position": "0,2", "value": null},
-    {"position": "1,0", "value": null},
-    {"position": "1,1", "value": null},
-    {"position": "1,2", "value": null},
-    {"position": "2,0", "value": null},
-    {"position": "2,1", "value": null},
-    {"position": "2,2", "value": "O"}
-  ].toString();
+  return json.encode({"cells":[{"position":"0,0","value":"X"},{"position":"0,1","value":null},{"position":"0,2","value":null},{"position":"1,0","value":null},{"position":"1,1","value":null},{"position":"1,2","value":null},{"position":"2,0","value":null},{"position":"2,1","value":null},{"position":"2,2","value":"O"}],"gameStatus":"inProgress"}).toString();
+  ;
 }
 
 String getEmptyStateBoardJson() {
-  return [{"position":"0,0","value":"X"},{"position":"0,1","value":"X"},{"position":"0,2","value":null},{"position":"1,0","value":null},{"position":"1,1","value":null},{"position":"1,2","value":null},{"position":"2,0","value":"O"},{"position":"2,1","value":null},{"position":"2,2","value":null}].toString();
+  return json.encode({"cells":[{"position":"0,0","value":null},{"position":"0,1","value":null},{"position":"0,2","value":null},{"position":"1,0","value":null},{"position":"1,1","value":null},{"position":"1,2","value":null},{"position":"2,0","value":null},{"position":"2,1","value":null},{"position":"2,2","value":null}],"gameStatus":"inProgress"}).toString();
 }

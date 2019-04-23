@@ -7,6 +7,7 @@ import 'package:tictactoe/GameRules.dart';
 import 'package:tictactoe/GameState.dart';
 import 'package:tictactoe/PlayerWidget.dart';
 import 'package:tictactoe/WinWidget.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'GameResultScreen.dart';
 
@@ -17,9 +18,10 @@ class HomeScreen extends StatefulWidget {
 
 class _HomePageState extends State<HomeScreen> {
   GameRules gameRules;
-  bool isDisableClick = false;
-
+  bool isDisableClick;
   Dio dio;
+
+  TextEditingController ipInputController;
 
   @override
   void initState() {
@@ -28,6 +30,7 @@ class _HomePageState extends State<HomeScreen> {
     dio = Dio();
     dio.options.connectTimeout = 1500; //5s
     dio.options.receiveTimeout = 1500;
+    ipInputController = new TextEditingController(text: GameConstants.DEFAULT_URL);
   }
 
   void init() {
@@ -60,6 +63,43 @@ class _HomePageState extends State<HomeScreen> {
                       style: TextStyle(color: Colors.orangeAccent),
                     ),
                   ),
+                  IconButton(icon: Icon(Icons.settings, color: Colors.white), onPressed: () {
+                    AlertDialog dialog = new AlertDialog(
+                      actions: <Widget>[
+                        FlatButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: Text(
+                            'CANCEL',
+                            style: TextStyle(color: Colors.orangeAccent),
+                          ),
+                        ),
+                        FlatButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                            debugPrint(ipInputController.value.toString());
+                          },
+                          child: Text(
+                            'DONE',
+                            style: TextStyle(color: Colors.orangeAccent),
+                          ),
+                        )
+                      ],
+                        content: TextField(
+                          controller: ipInputController,
+                          decoration: InputDecoration(
+                            hintText: "Enter your url",
+                            hintStyle: TextStyle(fontWeight: FontWeight.w300, color: Colors.orange),
+                            enabledBorder: new UnderlineInputBorder(
+                                borderSide: new BorderSide(color: Colors.orange)),
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.orange),
+                            ),
+                          ),
+                        ));
+                    showDialog(context: context, builder: (BuildContext context) => dialog);
+                  },)
                 ],
                 title: new Text('Tic Tac Toe'),
               ),
@@ -124,7 +164,7 @@ class _HomePageState extends State<HomeScreen> {
   Future<void> postData(BuildContext context) async {
     try {
       debugPrint("Printing request " + gameRules.getBoardJSON());
-      var response =  await dio.post(GameConstants.URL, data: gameRules.getBoardJSON());
+      var response =  await dio.post(GameConstants.DEFAULT_URL, data: gameRules.getBoardJSON());
       debugPrint("Response body " + response.data.toString());
       setState(() {
         isDisableClick = false;
@@ -144,8 +184,8 @@ class _HomePageState extends State<HomeScreen> {
     }
   }
 
-  String _handleError(BuildContext context, Error error) {
-    String errorDescription = "";
+  void _handleError(BuildContext context, Error error) {
+    String errorDescription = "Unexpected error occured";
     if (error is DioError) {
       switch (error.type) {
         case DioErrorType.CANCEL:
@@ -169,18 +209,14 @@ class _HomePageState extends State<HomeScreen> {
           errorDescription = "Send timeout in connection with API server";
           break;
       }
-    } else {
-      errorDescription = "Unexpected error occured";
     }
     loadMessagePopup(context, errorDescription);
-    return errorDescription;
   }
 
   Future<void> loadMessagePopup(BuildContext context, String message) async {
     setState(() {
       init();
     });
-
     Navigator.of(context).push(PageRouteBuilder(
         opaque: false,
         pageBuilder: (BuildContext context, _, __) =>
